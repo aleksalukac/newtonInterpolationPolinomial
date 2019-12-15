@@ -1,0 +1,9 @@
+C:\Users\Aleksa\source\repos\njutn\njutn\obj\Debug\njutn.csprojAssemblyReference.cache
+C:\Users\Aleksa\source\repos\njutn\njutn\bin\Debug\njutn.exe.config
+C:\Users\Aleksa\source\repos\njutn\njutn\bin\Debug\njutn.exe
+C:\Users\Aleksa\source\repos\njutn\njutn\bin\Debug\njutn.pdb
+C:\Users\Aleksa\source\repos\njutn\njutn\obj\Debug\njutn.exe
+C:\Users\Aleksa\source\repos\njutn\njutn\obj\Debug\njutn.pdb
+C:\Users\Aleksa\source\repos\njutn\njutn\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Aleksa\source\repos\njutn\njutn\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Aleksa\source\repos\njutn\njutn\obj\Debug\njutn.csproj.CopyComplete
