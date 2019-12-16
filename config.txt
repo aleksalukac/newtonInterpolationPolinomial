@@ -1,0 +1,4 @@
+//1 - generisanje novih sifri (broj ljudi, broj ljudi koji otkljucavaju) ... 2 - otkljucavanje sifre
+2
+5
+3

@@ -68,8 +68,8 @@ namespace njutn
             return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount).TrimEnd("\0".ToCharArray());
         }
 
-        const int party_size = 10;
-        const int min_unlock_size = 7;
+        static public int party_size = 10;
+        static public int min_unlock_size = 7;
         static public List<Point> Points;
         static public double[,] memory = new double[300,300]; //default value - 0
         static public bool[,] filled = new bool[300, 300]; // default value - false
@@ -102,7 +102,7 @@ namespace njutn
 
             return (findCoeff(down, up - 1) - findCoeff(down + 1, up)) / (x(down) - x(up));
         }
-        static double function( double s)
+        static double function(double s)
         {
             double sum = 0;
             for (int i = 0; i < Points.Count; i++)
@@ -145,7 +145,10 @@ namespace njutn
         {
             string[] lines = System.IO.File.ReadAllLines(@"..\..\emails.txt");
             int k = 0;
-            for(int i = 0; i < lines.Length; i+=2)
+
+            string passwords = "";
+
+            for(int i = 0; i < lines.Length; i += 2)
             {
                 try
                 {
@@ -170,7 +173,7 @@ namespace njutn
 
                     MailAddress myemail = new MailAddress("secretsanta.rtc@gmail.com", "SECRET KEY MASTER");
                     //MailAddress mail_to = new MailAddress("aleksa@lukac.rs", "Receiver");
-                    MailAddress mail_to = new MailAddress(lines[i], "Key holder " + (++i));
+                    MailAddress mail_to = new MailAddress(lines[i], "Key holder " + (i+1));
 
                     string password = "Sant@123";
 
@@ -185,17 +188,23 @@ namespace njutn
                     message.Body = "Your key is " + encryptedPoints + "\n";
 
 
-                    //OVU LINIJU ODKOMENTARISATI ZA DEMO
-                    //client_smtp.Send(message);
+                    Console.WriteLine(encryptedPoints);
+                    passwords += System.Environment.NewLine + encryptedPoints;
 
-                    Console.WriteLine("Successfully sent email");
+                    //OVU LINIJU ODKOMENTARISATI ZA DEMO SA MEJLOM
+                    //client_smtp.Send(message);
+                    //Console.WriteLine("Successfully sent email");
+
 
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
                 }
+
             }
+            System.IO.File.WriteAllText(@"..\..\password.txt", Encrypt(function(0).ToString()));
+            System.IO.File.WriteAllText(@"..\..\keys.txt", passwords);
 
         }
 
@@ -214,29 +223,54 @@ namespace njutn
         static void Main(string[] args)
         {
             Random rnd = new Random();
+            string[] lines = System.IO.File.ReadAllLines(@"..\..\config.txt");
 
-            ///Test rada njutnovog interpolacionog polinoma (treba da vrati -sqrt(2)):
-            //Points = GenerateRandomPoints(rnd, 5);
-            //Console.WriteLine(function(-1));
+            bool successfullParse = int.TryParse(lines[1], out int actionCode);
 
-            Points = GenerateRandomPoints(rnd, min_unlock_size);
-
-            //provera
-            /*
-            for(int i = 0; i < party_size; i++)
+            if(actionCode == 1)
             {
-                if (i < Points.Count)
-                    Console.WriteLine("( " + Points[i].x + " , " + Points[i].y + " ) Provera: " + function(Points[i].x));
-                else
-                {
-                    double x = rnd.Next(0, 1000) + 0.5;
-                    Console.WriteLine("( " + x + " , " + function(x) + " )");
-                    Points.Add(new Point(x, function(x)));
-                }
-            }*/
+                successfullParse = int.TryParse(lines[2], out party_size);
+                successfullParse = int.TryParse(lines[2], out min_unlock_size);
 
-            Console.WriteLine();
-            SendKeys(rnd);
+                ///Test rada njutnovog interpolacionog polinoma (treba da vrati -sqrt(2)):
+                //Points = GenerateRandomPoints(rnd, 5);
+                //Console.WriteLine(function(-1));
+
+                Points = GenerateRandomPoints(rnd, min_unlock_size);
+
+                //provera
+                /*
+                for(int i = 0; i < party_size; i++)
+                {
+                    if (i < Points.Count)
+                        Console.WriteLine("( " + Points[i].x + " , " + Points[i].y + " ) Provera: " + function(Points[i].x));
+                    else
+                    {
+                        double x = rnd.Next(0, 1000) + 0.5;
+                        Console.WriteLine("( " + x + " , " + function(x) + " )");
+                        Points.Add(new Point(x, function(x)));
+                    }
+                }*/
+
+                Console.WriteLine();
+                SendKeys(rnd);
+            }
+            else if(actionCode == 2)
+            {
+                string[] passwords = System.IO.File.ReadAllLines(@"..\..\keys.txt");
+                Points = new List<Point>();
+                foreach(var line in passwords)
+                {
+                    var fetch = JsonConvert.DeserializeObject<Point[]>(Decrypt(line));
+                    foreach(var pnt in fetch)
+                    {
+                        Points.Add(pnt);
+                    }
+                    //var fileList = fetch.First(); // here we have a single FileList object
+                }
+
+                Console.WriteLine(Encrypt(function(0).ToString()));
+            }
         }
     }
 }
