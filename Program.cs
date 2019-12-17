@@ -189,11 +189,11 @@ namespace njutn
 
 
                     Console.WriteLine(encryptedPoints);
-                    passwords += System.Environment.NewLine + encryptedPoints;
+                    passwords += encryptedPoints + System.Environment.NewLine;
 
                     //OVU LINIJU ODKOMENTARISATI ZA DEMO SA MEJLOM
-                    //client_smtp.Send(message);
-                    //Console.WriteLine("Successfully sent email");
+                    client_smtp.Send(message);
+                    Console.WriteLine("Successfully sent email");
 
 
                 }
